@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAPI Spec (version 3.0) Generator Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #2c3e50;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .add-button {
+            background-color: #2ecc71;
+        }
+
+        .add-button:hover {
+            background-color: #27ae60;
+        }
+
+        .remove-button {
+            background-color: #e74c3c;
+        }
+
+        .remove-button:hover {
+            background-color: #c0392b;
+        }
+
+        .helper-text {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .field-group {
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .nested-group {
+            margin-left: 20px;
+            border-left: 2px solid #3498db;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        OpenAPI Spec (version 3.0) Generator Tool
+        <span style="display: block; font-size: 0.5em; font-weight: normal; margin-top: 10px;">
+            Welcome to this intuitive OpenAPI Spec creator tool, designed to help you effortlessly generate OpenAPI specifications compliant with version 3.0 schema. This user-friendly interface guides you through the process of defining your API's structure, endpoints, parameters, and responses, ensuring your documentation is both comprehensive and standard-compliant. Whether you're a seasoned API developer or just starting out, our tool simplifies the creation of clear, accurate, and professional API documentation.
+        </span>
+    </h1>
+
+    <div class="container">
+        <h2>Basic Information</h2>
+        <p class="helper-text">Fill in the basic details about your API here.</p>
+        <label for="apiTitle">API Title:</label>
+        <input type="text" id="apiTitle" placeholder="e.g., My Awesome API">
+
+        <label for="apiDescription">API Description:</label>
+        <textarea id="apiDescription" rows="3" placeholder="Brief description of your API"></textarea>
+
+        <label for="apiVersion">API Version:</label>
+        <input type="text" id="apiVersion" placeholder="e.g., 1.0.0">
+
+        <label for="termsOfService">Terms of Service URL:</label>
+        <input type="url" id="termsOfService" placeholder="e.g., http://example.com/terms/">
+
+        <h3>Contact Information</h3>
+        <label for="contactName">Name:</label>
+        <input type="text" id="contactName" placeholder="Contact name">
+
+        <label for="contactEmail">Email:</label>
+        <input type="email" id="contactEmail" placeholder="contact@example.com">
+
+        <label for="contactUrl">URL:</label>
+        <input type="url" id="contactUrl" placeholder="http://example.com/contact">
+
+        <h3>License Information</h3>
+        <label for="licenseName">Name:</label>
+        <input type="text" id="licenseName" placeholder="e.g., Apache 2.0">
+
+        <label for="licenseUrl">URL:</label>
+        <input type="url" id="licenseUrl" placeholder="http://www.apache.org/licenses/LICENSE-2.0.html">
+
+        <h3>External Documentation</h3>
+        <label for="externalDocsDescription">Description:</label>
+        <input type="text" id="externalDocsDescription" placeholder="e.g., Find out more about our API">
+
+        <label for="externalDocsUrl">URL:</label>
+        <input type="url" id="externalDocsUrl" placeholder="https://example.com/docs">
+    </div>
+    <div class="container">
+        <h2>Server Information</h2>
+        <p class="helper-text">Add one or more server URLs for your API. Use (+) to add and (-) to remove.</p>
+        <div id="serverUrls">
+            <div class="field-group" id="serverGroup1">
+                <label for="serverUrl1">Server URL 1:</label>
+                <input type="url" id="serverUrl1" placeholder="e.g., https://api.example.com/v1">
+                <label for="serverDescription1">Description:</label>
+                <input type="text" id="serverDescription1" placeholder="e.g., Production server">
+                <button class="remove-button" onclick="removeServerUrl(1)" style="display:none;">- Remove</button>
+            </div>
+        </div>
+        <button class="add-button" onclick="addServerUrl()">+ Add Server URL</button>
+    </div>
+
+    <div class="container">
+        <h2>Tags</h2>
+        <p class="helper-text">Define tags to group operations. Use (+) to add and (-) to remove.</p>
+        <div id="tags">
+            <div class="field-group" id="tagGroup1">
+                <label for="tagName1">Tag Name:</label>
+                <input type="text" id="tagName1" placeholder="e.g., user">
+                <label for="tagDescription1">Description:</label>
+                <input type="text" id="tagDescription1" placeholder="e.g., User operations">
+                <label for="tagExternalDocsDescription1">External Docs Description:</label>
+                <input type="text" id="tagExternalDocsDescription1" placeholder="e.g., Find out more">
+                <label for="tagExternalDocsUrl1">External Docs URL:</label>
+                <input type="url" id="tagExternalDocsUrl1" placeholder="https://example.com/docs/user">
+                <button class="remove-button" onclick="removeTag(1)" style="display:none;">- Remove Tag</button>
+            </div>
+        </div>
+        <button class="add-button" onclick="addTag()">+ Add Tag</button>
+    </div>
+
+    <div class="container">
+        <h2>Paths and Operations</h2>
+        <p class="helper-text">Define the endpoints of your API. Use (+) to add and (-) to remove.</p>
+        <div id="paths">
+            <div class="field-group" id="pathGroup1">
+                <label for="path1">Path:</label>
+                <input type="text" id="path1" placeholder="e.g., /users">
+
+                <div id="operations1">
+                    <div class="nested-group" id="operationGroup1_1">
+                        <label for="method1_1">HTTP Method:</label>
+                        <select id="method1_1">
+                            <option value="get">GET</option>
+                            <option value="post">POST</option>
+                            <option value="put">PUT</option>
+                            <option value="delete">DELETE</option>
+                            <option value="patch">PATCH</option>
+                        </select>
+
+                        <label for="operationId1_1">Operation ID:</label>
+                        <input type="text" id="operationId1_1" placeholder="e.g., getUsers">
+
+                        <label for="summary1_1">Summary:</label>
+                        <input type="text" id="summary1_1" placeholder="Brief summary of this operation">
+
+                        <label for="description1_1">Description:</label>
+                        <textarea id="description1_1" rows="2"
+                            placeholder="Detailed description of this operation"></textarea>
+
+                        <label for="tags1_1">Tags (comma-separated):</label>
+                        <input type="text" id="tags1_1" placeholder="e.g., user, list">
+
+                        <h4>Parameters</h4>
+                        <div id="parameters1_1">
+                            <div class="nested-group" id="paramGroup1_1_1">
+                                <label for="paramName1_1_1">Name:</label>
+                                <input type="text" id="paramName1_1_1" placeholder="e.g., id">
+
+                                <label for="paramIn1_1_1">In:</label>
+                                <select id="paramIn1_1_1">
+                                    <option value="query">Query</option>
+                                    <option value="path">Path</option>
+                                    <option value="header">Header</option>
+                                    <option value="cookie">Cookie</option>
+                                </select>
+
+                                <label for="paramDescription1_1_1">Description:</label>
+                                <input type="text" id="paramDescription1_1_1"
+                                    placeholder="Description of the parameter">
+
+                                <label for="paramRequired1_1_1">Required:</label>
+                                <select id="paramRequired1_1_1">
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+
+                                <label for="paramType1_1_1">Type:</label>
+                                <select id="paramType1_1_1">
+                                    <option value="string">String</option>
+                                    <option value="integer">Integer</option>
+                                    <option value="number">Number</option>
+                                    <option value="boolean">Boolean</option>
+                                    <option value="array">Array</option>
+                                    <option value="object">Object</option>
+                                </select>
+
+                                <label for="paramEnum1_1_1">Enum (comma-separated):</label>
+                                <input type="text" id="paramEnum1_1_1" placeholder="e.g., value1,value2,value3">
+
+                                <label for="paramMinimum1_1_1">Minimum:</label>
+                                <input type="number" id="paramMinimum1_1_1" placeholder="e.g., 1">
+
+                                <label for="paramMaximum1_1_1">Maximum:</label>
+                                <input type="number" id="paramMaximum1_1_1" placeholder="e.g., 100">
+
+                                <label for="paramPattern1_1_1">Pattern:</label>
+                                <input type="text" id="paramPattern1_1_1" placeholder="e.g., ^[a-zA-Z0-9]+$">
+
+                                <button class="remove-button" onclick="removeParameter(1, 1, 1)" style="display:none;">-
+                                    Remove Parameter</button>
+                            </div>
+                        </div>
+                        <button class="add-button" onclick="addParameter(1, 1)">+ Add Parameter</button>
+                        <h4>Request Body</h4>
+                        <div id="requestBody1_1">
+                            <label for="requestBodyDescription1_1">Description:</label>
+                            <input type="text" id="requestBodyDescription1_1"
+                                placeholder="Description of the request body">
+
+                            <label for="requestBodyRequired1_1">Required:</label>
+                            <select id="requestBodyRequired1_1">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+
+                            <div id="requestBodyContent1_1">
+                                <div class="nested-group" id="requestBodyContentType1_1_1">
+                                    <label for="requestBodyContentType1_1_1">Content Type:</label>
+                                    <input type="text" id="requestBodyContentType1_1_1"
+                                        placeholder="e.g., application/json">
+
+                                    <label for="requestBodySchema1_1_1">Schema Reference:</label>
+                                    <input type="text" id="requestBodySchema1_1_1"
+                                        placeholder="e.g., #/components/schemas/User">
+
+                                    <label for="requestBodyExample1_1_1">Example:</label>
+                                    <textarea id="requestBodyExample1_1_1" rows="3"
+                                        placeholder="Provide an example of the request body"></textarea>
+
+                                    <button class="remove-button" onclick="removeRequestBodyContent(1, 1, 1)"
+                                        style="display:none;">- Remove Content Type</button>
+                                </div>
+                            </div>
+                            <button class="add-button" onclick="addRequestBodyContent(1, 1)">+ Add Content Type</button>
+                        </div>
+
+                        <h4>Responses</h4>
+                        <div id="responses1_1">
+                            <div class="nested-group" id="responseGroup1_1_200">
+                                <label for="responseCode1_1_200">Status Code:</label>
+                                <input type="text" id="responseCode1_1_200" value="200" readonly>
+
+                                <label for="responseDescription1_1_200">Description:</label>
+                                <input type="text" id="responseDescription1_1_200"
+                                    placeholder="e.g., Successful response">
+
+                                <div id="responseContent1_1_200">
+                                    <div class="nested-group" id="responseContentType1_1_200_1">
+                                        <label for="responseContentType1_1_200_1">Content Type:</label>
+                                        <input type="text" id="responseContentType1_1_200_1" value="application/json"
+                                            placeholder="e.g., application/json">
+
+                                        <label for="responseSchema1_1_200_1">Schema Reference:</label>
+                                        <input type="text" id="responseSchema1_1_200_1"
+                                            placeholder="e.g., #/components/schemas/User">
+
+                                        <label for="responseExample1_1_200_1">Example:</label>
+                                        <textarea id="responseExample1_1_200_1" rows="3"
+                                            placeholder="Provide an example of the response"></textarea>
+
+                                        <button class="remove-button" onclick="removeResponseContent(1, 1, 200, 1)"
+                                            style="display:none;">- Remove Content Type</button>
+                                    </div>
+                                </div>
+                                <button class="add-button" onclick="addResponseContent(1, 1, 200)">+ Add Content
+                                    Type</button>
+
+                                <label for="responseHeaders1_1_200">Headers (comma-separated):</label>
+                                <input type="text" id="responseHeaders1_1_200"
+                                    placeholder="e.g., X-Rate-Limit,X-Expires-After">
+
+                                <button class="remove-button" onclick="removeResponse(1, 1, 200)"
+                                    style="display:none;">- Remove Response</button>
+                            </div>
+                        </div>
+                        <button class="add-button" onclick="addResponse(1, 1)">+ Add Response</button>
+
+                        <h4>Security</h4>
+                        <div id="security1_1">
+                            <div class="nested-group" id="securityRequirement1_1_1">
+                                <label for="securityScheme1_1_1">Security Scheme:</label>
+                                <input type="text" id="securityScheme1_1_1" placeholder="e.g., api_key">
+
+                                <label for="securityScopes1_1_1">Scopes (comma-separated):</label>
+                                <input type="text" id="securityScopes1_1_1" placeholder="e.g., read:users,write:users">
+
+                                <button class="remove-button" onclick="removeSecurityRequirement(1, 1, 1)"
+                                    style="display:none;">- Remove Security Requirement</button>
+                            </div>
+                        </div>
+                        <button class="add-button" onclick="addSecurityRequirement(1, 1)">+ Add Security
+                            Requirement</button>
+
+                        <button class="remove-button" onclick="removeOperation(1, 1)" style="display:none;">- Remove
+                            Operation</button>
+                    </div>
+                </div>
+                <button class="add-button" onclick="addOperation(1)">+ Add Operation</button>
+
+                <button class="remove-button" onclick="removePath(1)" style="display:none;">- Remove Path</button>
+            </div>
+        </div>
+        <button class="add-button" onclick="addPath()">+ Add Path</button>
+    </div>
+    <div class="container">
+        <h2>Components</h2>
+        <h3>Schemas</h3>
+        <div id="schemas">
+            <div class="field-group" id="schemaGroup1">
+                <label for="schemaName1">Schema Name:</label>
+                <input type="text" id="schemaName1" placeholder="e.g., User">
+
+                <label for="schemaType1">Type:</label>
+                <select id="schemaType1">
+                    <option value="object">Object</option>
+                    <option value="array">Array</option>
+                    <option value="string">String</option>
+                    <option value="integer">Integer</option>
+                    <option value="number">Number</option>
+                    <option value="boolean">Boolean</option>
+                </select>
+
+                <div id="schemaProperties1">
+                    <div class="nested-group" id="propertyGroup1_1">
+                        <label for="propertyName1_1">Property Name:</label>
+                        <input type="text" id="propertyName1_1" placeholder="e.g., id">
+
+                        <label for="propertyType1_1">Type:</label>
+                        <select id="propertyType1_1">
+                            <option value="string">String</option>
+                            <option value="integer">Integer</option>
+                            <option value="number">Number</option>
+                            <option value="boolean">Boolean</option>
+                            <option value="array">Array</option>
+                            <option value="object">Object</option>
+                        </select>
+
+                        <label for="propertyFormat1_1">Format (optional):</label>
+                        <input type="text" id="propertyFormat1_1" placeholder="e.g., date-time, int64">
+
+                        <label for="propertyDescription1_1">Description:</label>
+                        <input type="text" id="propertyDescription1_1" placeholder="Property description">
+
+                        <label for="propertyExample1_1">Example:</label>
+                        <input type="text" id="propertyExample1_1" placeholder="Example value">
+
+                        <label for="propertyMinimum1_1">Minimum:</label>
+                        <input type="number" id="propertyMinimum1_1" placeholder="e.g., 1">
+
+                        <label for="propertyMaximum1_1">Maximum:</label>
+                        <input type="number" id="propertyMaximum1_1" placeholder="e.g., 100">
+
+                        <label for="propertyPattern1_1">Pattern:</label>
+                        <input type="text" id="propertyPattern1_1" placeholder="e.g., ^[a-zA-Z0-9]+$">
+
+                        <label for="propertyEnum1_1">Enum (comma-separated):</label>
+                        <input type="text" id="propertyEnum1_1" placeholder="e.g., value1,value2,value3">
+
+                        <h4>XML</h4>
+                        <label for="propertyXmlName1_1">XML Name:</label>
+                        <input type="text" id="propertyXmlName1_1" placeholder="e.g., user">
+
+                        <label for="propertyXmlNamespace1_1">XML Namespace:</label>
+                        <input type="text" id="propertyXmlNamespace1_1" placeholder="e.g., http://example.com/schema">
+
+                        <label for="propertyXmlPrefix1_1">XML Prefix:</label>
+                        <input type="text" id="propertyXmlPrefix1_1" placeholder="e.g., xmp">
+
+                        <label for="propertyXmlAttribute1_1">XML Attribute:</label>
+                        <input type="checkbox" id="propertyXmlAttribute1_1">
+
+                        <label for="propertyXmlWrapped1_1">XML Wrapped:</label>
+                        <input type="checkbox" id="propertyXmlWrapped1_1">
+
+                        <button class="remove-button" onclick="removeProperty(1, 1)" style="display:none;">- Remove
+                            Property</button>
+                    </div>
+                </div>
+                <button class="add-button" onclick="addProperty(1)">+ Add Property</button>
+
+                <label for="requiredProperties1">Required Properties (comma-separated):</label>
+                <input type="text" id="requiredProperties1" placeholder="e.g., id,name">
+
+                <button class="remove-button" onclick="removeSchema(1)" style="display:none;">- Remove Schema</button>
+            </div>
+        </div>
+        <button class="add-button" onclick="addSchema()">+ Add Schema</button>
+    </div>
+
+    <div class="container">
+        <h2>Security Schemes</h2>
+        <div id="securitySchemes">
+            <div class="field-group" id="securitySchemeGroup1">
+                <label for="securitySchemeName1">Name:</label>
+                <input type="text" id="securitySchemeName1" placeholder="e.g., api_key">
+
+                <label for="securitySchemeType1">Type:</label>
+                <select id="securitySchemeType1" onchange="toggleSecuritySchemeFields(1)">
+                    <option value="apiKey">API Key</option>
+                    <option value="http">HTTP</option>
+                    <option value="oauth2">OAuth2</option>
+                    <option value="openIdConnect">OpenID Connect</option>
+                </select>
+
+                <div id="apiKeyFields1" style="display:none;">
+                    <label for="apiKeyName1">Key Name:</label>
+                    <input type="text" id="apiKeyName1" placeholder="e.g., X-API-Key">
+
+                    <label for="apiKeyIn1">In:</label>
+                    <select id="apiKeyIn1">
+                        <option value="header">Header</option>
+                        <option value="query">Query</option>
+                        <option value="cookie">Cookie</option>
+                    </select>
+                </div>
+
+                <div id="httpFields1" style="display:none;">
+                    <label for="httpScheme1">Scheme:</label>
+                    <input type="text" id="httpScheme1" placeholder="e.g., bearer">
+                </div>
+
+                <div id="oauth2Fields1" style="display:none;">
+                    <label for="oauth2Flow1">Flow:</label>
+                    <select id="oauth2Flow1">
+                        <option value="implicit">Implicit</option>
+                        <option value="password">Password</option>
+                        <option value="clientCredentials">Client Credentials</option>
+                        <option value="authorizationCode">Authorization Code</option>
+                    </select>
+
+                    <label for="oauth2AuthorizationUrl1">Authorization URL:</label>
+                    <input type="url" id="oauth2AuthorizationUrl1" placeholder="https://example.com/oauth/authorize">
+
+                    <label for="oauth2TokenUrl1">Token URL:</label>
+                    <input type="url" id="oauth2TokenUrl1" placeholder="https://example.com/oauth/token">
+
+                    <label for="oauth2Scopes1">Scopes (comma-separated):</label>
+                    <input type="text" id="oauth2Scopes1" placeholder="e.g., read:pets,write:pets">
+                </div>
+
+                <div id="openIdConnectFields1" style="display:none;">
+                    <label for="openIdConnectUrl1">OpenID Connect URL:</label>
+                    <input type="url" id="openIdConnectUrl1"
+                        placeholder="https://example.com/.well-known/openid-configuration">
+                </div>
+
+                <button class="remove-button" onclick="removeSecurityScheme(1)" style="display:none;">- Remove Security
+                    Scheme</button>
+            </div>
+        </div>
+        <button class="add-button" onclick="addSecurityScheme()">+ Add Security Scheme</button>
+    </div>
+
+    <button onclick="generateYaml()">Generate YAML</button>
+
+    <script>
+        let serverUrlCount = 1;
+        let tagCount = 1;
+        let pathCount = 1;
+        let schemaCount = 1;
+        let securitySchemeCount = 1;
+
+        function addServerUrl() {
+            serverUrlCount++;
+            const serverUrls = document.getElementById('serverUrls');
+            const newGroup = document.createElement('div');
+            newGroup.className = 'field-group';
+            newGroup.id = `serverGroup${serverUrlCount}`;
+            newGroup.innerHTML = `
+                <label for="serverUrl${serverUrlCount}">Server URL ${serverUrlCount}:</label>
+                <input type="url" id="serverUrl${serverUrlCount}" placeholder="e.g., https://api.example.com/v1">
+                <label for="serverDescription${serverUrlCount}">Description:</label>
+                <input type="text" id="serverDescription${serverUrlCount}" placeholder="e.g., Production server">
+                <button class="remove-button" onclick="removeServerUrl(${serverUrlCount})">- Remove</button>
+            `;
+            serverUrls.appendChild(newGroup);
+            document.querySelector(`#serverGroup1 .remove-button`).style.display = 'inline-block';
+        }
+
+        function removeServerUrl(id) {
+            const serverGroup = document.getElementById(`serverGroup${id}`);
+            serverGroup.remove();
+            if (document.querySelectorAll('#serverUrls .field-group').length === 1) {
+                document.querySelector(`#serverGroup1 .remove-button`).style.display = 'none';
+            }
+        }
+
+        function addTag() {
+            tagCount++;
+            const tags = document.getElementById('tags');
+            const newGroup = document.createElement('div');
+            newGroup.className = 'field-group';
+            newGroup.id = `tagGroup${tagCount}`;
+            newGroup.innerHTML = `
+                <label for="tagName${tagCount}">Tag Name:</label>
+                <input type="text" id="tagName${tagCount}" placeholder="e.g., user">
+                <label for="tagDescription${tagCount}">Description:</label>
+                <input type="text" id="tagDescription${tagCount}" placeholder="e.g., User operations">
+                <label for="tagExternalDocsDescription${tagCount}">External Docs Description:</label>
+                <input type="text" id="tagExternalDocsDescription${tagCount}" placeholder="e.g., Find out more">
+                <label for="tagExternalDocsUrl${tagCount}">External Docs URL:</label>
+                <input type="url" id="tagExternalDocsUrl${tagCount}" placeholder="https://example.com/docs/user">
+                <button class="remove-button" onclick="removeTag(${tagCount})">- Remove Tag</button>
+            `;
+            tags.appendChild(newGroup);
+            document.querySelector(`#tagGroup1 .remove-button`).style.display = 'inline-block';
+        }
+
+        function removeTag(id) {
+            const tagGroup = document.getElementById(`tagGroup${id}`);
+            tagGroup.remove();
+            if (document.querySelectorAll('#tags .field-group').length === 1) {
+                document.querySelector(`#tagGroup1 .remove-button`).style.display = 'none';
+            }
+        }
+
+        function addPath() {
+            pathCount++;
+            const paths = document.getElementById('paths');
+            const newGroup = document.createElement('div');
+            newGroup.className = 'field-group';
+            newGroup.id = `pathGroup${pathCount}`;
+            newGroup.innerHTML = `
+                <label for="path${pathCount}">Path:</label>
+                <input type="text" id="path${pathCount}" placeholder="e.g., /users">
+                <div id="operations${pathCount}"></div>
+                <button class="add-button" onclick="addOperation(${pathCount})">+ Add Operation</button>
+                <button class="remove-button" onclick="removePath(${pathCount})">- Remove Path</button>
+            `;
+            paths.appendChild(newGroup);
+            addOperation(pathCount);
+            document.querySelector(`#pathGroup1 .remove-button`).style.display = 'inline-block';
+        }
+
+        function removePath(id) {
+            const pathGroup = document.getElementById(`pathGroup${id}`);
+            pathGroup.remove();
+            if (document.querySelectorAll('#paths .field-group').length === 1) {
+                document.querySelector(`#pathGroup1 .remove-button`).style.display = 'none';
+            }
+        }
+
+        function addOperation(pathId) {
+            const operations = document.getElementById(`operations${pathId}`);
+            const operationCount = operations.children.length + 1;
+            const newGroup = document.createElement('div');
+            newGroup.className = 'nested-group';
+            newGroup.id = `operationGroup${pathId}_${operationCount}`;
+            newGroup.innerHTML = `
+                <label for="method${pathId}_${operationCount}">HTTP Method:</label>
+                <select id="method${pathId}_${operationCount}">
+                    <option value="get">GET</option>
+                    <option value="post">POST</option>
+                    <option value="put">PUT</option>
+                    <option value="delete">DELETE</option>
+                    <option value="patch">PATCH</option>
+                </select>
+                <label for="operationId${pathId}_${operationCount}">Operation ID:</label>
+                <input type="text" id="operationId${pathId}_${operationCount}" placeholder="e.g., getUsers">
+                <label for="summary${pathId}_${operationCount}">Summary:</label>
+                <input type="text" id="summary${pathId}_${operationCount}" placeholder="Brief summary of this operation">
+                <label for="description${pathId}_${operationCount}">Description:</label>
+                <textarea id="description${pathId}_${operationCount}" rows="2" placeholder="Detailed description of this operation"></textarea>
+                <label for="tags${pathId}_${operationCount}">Tags (comma-separated):</label>
+                <input type="text" id="tags${pathId}_${operationCount}" placeholder="e.g., user, list">
+                <h4>Parameters</h4>
+                <div id="parameters${pathId}_${operationCount}"></div>
+                <button class="add-button" onclick="addParameter(${pathId}, ${operationCount})">+ Add Parameter</button>
+                <h4>Request Body</h4>
+                <div id="requestBody${pathId}_${operationCount}"></div>
+                <button class="add-button" onclick="addRequestBodyContent(${pathId}, ${operationCount})">+ Add Request Body Content</button>
+                <h4>Responses</h4>
+                <div id="responses${pathId}_${operationCount}"></div>
+                <button class="add-button" onclick="addResponse(${pathId}, ${operationCount})">+ Add Response</button>
+                <h4>Security</h4>
+                <div id="security${pathId}_${operationCount}"></div>
+                <button class="add-button" onclick="addSecurityRequirement(${pathId}, ${operationCount})">+ Add Security Requirement</button>
+                <button class="remove-button" onclick="removeOperation(${pathId}, ${operationCount})">- Remove Operation</button>
+            `;
+            operations.appendChild(newGroup);
+            addParameter(pathId, operationCount);
+            addRequestBodyContent(pathId, operationCount);
+            addResponse(pathId, operationCount);
+            addSecurityRequirement(pathId, operationCount);
+            if (operations.children.length > 1) {
+                operations.querySelectorAll('.remove-button').forEach(button => button.style.display = 'inline-block');
+            }
+        }
+
+        function removeOperation(pathId, operationId) {
+            const operationGroup = document.getElementById(`operationGroup${pathId}_${operationId}`);
+            operationGroup.remove();
+            const operations = document.getElementById(`operations${pathId}`);
+            if (operations.children.length === 1) {
+                operations.querySelector('.remove-button').style.display = 'none';
+            }
+        }
+
+        function addParameter(pathId, operationId) {
+            const parameters = document.getElementById(`parameters${pathId}_${operationId}`);
+            const parameterCount = parameters.children.length + 1;
+            const newGroup = document.createElement('div');
+            newGroup.className = 'nested-group';
+            newGroup.id = `paramGroup${pathId}_${operationId}_${parameterCount}`;
+            newGroup.innerHTML = `
+                <label for="paramName${pathId}_${operationId}_${parameterCount}">Name:</label>
+                <input type="text" id="paramName${pathId}_${operationId}_${parameterCount}" placeholder="e.g., id">
+                <label for="paramIn${pathId}_${operationId}_${parameterCount}">In:</label>
+                <select id="paramIn${pathId}_${operationId}_${parameterCount}">
+                    <option value="query">Query</option>
+                    <option value="path">Path</option>
+                    <option value="header">Header</option>
+                    <option value="cookie">Cookie</option>
+                </select>
+                <label for="paramDescription${pathId}_${operationId}_${parameterCount}">Description:</label>
+                <input type="text" id="paramDescription${pathId}_${operationId}_${parameterCount}" placeholder="Description of the parameter">
+                <label for="paramRequired${pathId}_${operationId}_${parameterCount}">Required:</label>
+                <select id="paramRequired${pathId}_${operationId}_${parameterCount}">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <label for="paramType${pathId}_${operationId}_${parameterCount}">Type:</label>
+                <select id="paramType${pathId}_${operationId}_${parameterCount}">
+                    <option value="string">String</option>
+                    <option value="integer">Integer</option>
+                    <option value="number">Number</option>
+                    <option value="boolean">Boolean</option>
+                    <option value="array">Array</option>
+                    <option value="object">Object</option>
+                </select>
+                <label for="paramEnum${pathId}_${operationId}_${parameterCount}">Enum (comma-separated):</label>
+                <input type="text" id="paramEnum${pathId}_${operationId}_${parameterCount}" placeholder="e.g., value1,value2,value3">
+                <label for="paramMinimum${pathId}_${operationId}_${parameterCount}">Minimum:</label>
+                <input type="number" id="paramMinimum${pathId}_${operationId}_${parameterCount}" placeholder="e.g., 1">
+                <label for="paramMaximum${pathId}_${operationId}_${parameterCount}">Maximum:</label>
+                <input type="number" id="paramMaximum${pathId}_${operationId}_${parameterCount}" placeholder="e.g., 100">
+                <label for="paramPattern${pathId}_${operationId}_${parameterCount}">Pattern:</label>
+                <input type="text" id="paramPattern${pathId}_${operationId}_${parameterCount}" placeholder="e.g., ^[a-zA-Z0-9]+$">
+                <button class="remove-button" onclick="removeParameter(${pathId}, ${operationId}, ${parameterCount})">- Remove Parameter</button>
+            `;
+            parameters.appendChild(newGroup);
+            if (parameters.children.length > 1) {
+                parameters.querySelectorAll('.remove-button').forEach(button => button.style.display = 'inline-block');
+            }
+        }
+
+        function removeParameter(pathId, operationId, parameterId) {
+            const paramGroup = document.getElementById(`paramGroup${pathId}_${operationId}_${parameterId}`);
+            paramGroup.remove();
+            const parameters = document.getElementById(`parameters${pathId}_${operationId}`);
+            if (parameters.children.length === 1) {
+                parameters.querySelector('.remove-button').style.display = 'none';
+            }
+        }
+
+        function addRequestBodyContent(pathId, operationId) {
+            const requestBody = document.getElementById(`requestBody${pathId}_${operationId}`);
+            const contentCount = requestBody.children.length + 1;
+            const newGroup = document.createElement('div');
+            newGroup.className = 'nested-group';
+            newGroup.id = `requestBodyContentType${pathId}_${operationId}_${contentCount}`;
+            newGroup.innerHTML = `
+                <label for="requestBodyContentType${pathId}_${operationId}_${contentCount}">Content Type:</label>
+                <input type="text" id="requestBodyContentType${pathId}_${operationId}_${contentCount}" placeholder="e.g., application/json">
+                <label for="requestBodySchema${pathId}_${operationId}_${contentCount}">Schema Reference:</label>
+                <input type="text" id="requestBodySchema${pathId}_${operationId}_${contentCount}" placeholder="e.g., #/components/schemas/User">
+                <label for="requestBodyExample${pathId}_${operationId}_${contentCount}">Example:</label>
+                <textarea id="requestBodyExample${pathId}_${operationId}_${contentCount}" rows="3" placeholder="Provide an example of the request body"></textarea>
+                <button class="remove-button" onclick="removeRequestBodyContent(${pathId}, ${operationId}, ${contentCount})">- Remove Content Type</button>
+            `;
+            requestBody.appendChild(newGroup);
+            if (requestBody.children.length > 1) {
+                requestBody.querySelectorAll('.remove-button').forEach(button => button.style.display = 'inline-block');
+            }
+        }
+
+        function removeRequestBodyContent(pathId, operationId, contentId) {
+            const contentGroup = document.getElementById(`requestBodyContentType${pathId}_${operationId}_${contentId}`);
+            contentGroup.remove();
+            const requestBody = document.getElementById(`requestBody${pathId}_${operationId}`);
+            if (requestBody.children.length === 1) {
+                requestBody.querySelector('.remove-button').style.display = 'none';
+            }
+        }
+
+        function addResponse(pathId, operationId) {
+            const responses = document.getElementById(`responses${pathId}_${operationId}`);
+            const responseCount = responses.children.length + 1;
+            const newGroup = document.createElement('div');
+            newGroup.className = 'nested-group';
+            newGroup.id = `responseGroup${pathId}_${operationId}_${responseCount}`;
+            newGroup.innerHTML = `
+                <label for="responseCode${pathId}_${operationId}_${responseCount}">Status Code:</label>
+                <input type="text" id="responseCode${pathId}_${operationId}_${responseCount}" placeholder="e.g., 200">
+                <label for="responseDescription${pathId}_${operationId}_${responseCount}">Description:</label>
+                <input type="text" id="responseDescription${pathId}_${operationId}_${responseCount}" placeholder="e.g., Successful response">
+                <div id="responseContent${pathId}_${operationId}_${responseCount}"></div>
+                <button class="add-button" onclick="addResponseContent(${pathId}, ${operationId}, ${responseCount})">+ Add Content Type</button>
+                <label for="responseHeaders${pathId}_${operationId}_${responseCount}">Headers (comma-separated):</label>
+                <input type="text" id="responseHeaders${pathId}_${operationId}_${responseCount}" placeholder="e.g., X-Rate-Limit,X-Expires-After">
+                <button class="remove-button" onclick="removeResponse(${pathId}, ${operationId}, ${responseCount})">- Remove Response</button>
+            `;
+            responses.appendChild(newGroup);
+            addResponseContent(pathId, operationId, responseCount);
+            if (responses.children.length > 1) {
+                responses.querySelectorAll('.remove-button').forEach(button => button.style.display = 'inline-block');
+            }
+        }
+
+        function removeResponse(pathId, operationId, responseId) {
+            const responseGroup = document.getElementById(`responseGroup${pathId}_${operationId}_${responseId}`);
+            responseGroup.remove();
+            const responses = document.getElementById(`responses${pathId}_${operationId}`);
+            if (responses.children.length === 1) {
+                responses.querySelector('.remove-button').style.display = 'none';
+            }
+        }
+
+        function addResponseContent(pathId, operationId, responseId) {
+            const responseContent = document.getElementById(`responseContent${pathId}_${operationId}_${responseId}`);
+            const contentCount = responseContent.children.length + 1;
+            const newGroup = document.createElement('div');
+            newGroup.className = 'nested-group';
+            newGroup.id = `responseContentType${pathId}_${operationId}_${responseId}_${contentCount}`;
+            newGroup.innerHTML = `
+            <label for="responseContentType${pathId}_${operationId}_${responseId}_${contentCount}">Content Type:</label>
+            <input type="text" id="responseContentType${pathId}_${operationId}_${responseId}_${contentCount}" placeholder="e.g., application/json">
+            <label for="responseSchema${pathId}_${operationId}_${responseId}_${contentCount}">Schema Reference:</label>
+            <input type="text" id="responseSchema${pathId}_${operationId}_${responseId}_${contentCount}" placeholder="e.g., #/components/schemas/User">
+            <label for="responseExample${pathId}_${operationId}_${responseId}_${contentCount}">Example:</label>
+            <textarea id="responseExample${pathId}_${operationId}_${responseId}_${contentCount}" rows="3" placeholder="Provide an example of the response"></textarea>
+            <button class="remove-button" onclick="removeResponseContent(${pathId}, ${operationId}, ${responseId}, ${contentCount})">- Remove Content Type</button>
+        `;
+            responseContent.appendChild(newGroup);
+            if (responseContent.children.length > 1) {
+                responseContent.querySelectorAll('.remove-button').forEach(button => button.style.display = 'inline-block');
+            }
+        }
+
+        function removeResponseContent(pathId, operationId, responseId, contentId) {
+            const contentGroup = document.getElementById(`responseContentType${pathId}_${operationId}_${responseId}_${contentId}`);
+            contentGroup.remove();
+            const responseContent = document.getElementById(`responseContent${pathId}_${operationId}_${responseId}`);
+            if (responseContent.children.length === 1) {
+                responseContent.querySelector('.remove-button').style.display = 'none';
+            }
+        }
+
+        function addSecurityRequirement(pathId, operationId) {
+            const security = document.getElementById(`security${pathId}_${operationId}`);
+            const securityCount = security.children.length + 1;
+            const newGroup = document.createElement('div');
+            newGroup.className = 'nested-group';
+            newGroup.id = `securityRequirement${pathId}_${operationId}_${securityCount}`;
+            newGroup.innerHTML = `
+            <label for="securityScheme${pathId}_${operationId}_${securityCount}">Security Scheme:</label>
+            <input type="text" id="securityScheme${pathId}_${operationId}_${securityCount}" placeholder="e.g., api_key">
+            <label for="securityScopes${pathId}_${operationId}_${securityCount}">Scopes (comma-separated):</label>
+            <input type="text" id="securityScopes${pathId}_${operationId}_${securityCount}" placeholder="e.g., read:users,write:users">
+            <button class="remove-button" onclick="removeSecurityRequirement(${pathId}, ${operationId}, ${securityCount})">- Remove Security Requirement</button>
+        `;
+            security.appendChild(newGroup);
+            if (security.children.length > 1) {
+                security.querySelectorAll('.remove-button').forEach(button => button.style.display = 'inline-block');
+            }
+        }
+
+        function removeSecurityRequirement(pathId, operationId, securityId) {
+            const securityGroup = document.getElementById(`securityRequirement${pathId}_${operationId}_${securityId}`);
+            securityGroup.remove();
+            const security = document.getElementById(`security${pathId}_${operationId}`);
+            if (security.children.length === 1) {
+                security.querySelector('.remove-button').style.display = 'none';
+            }
+        }
+
+        function addSchema() {
+            schemaCount++;
+            const schemas = document.getElementById('schemas');
+            const newGroup = document.createElement('div');
+            newGroup.className = 'field-group';
+            newGroup.id = `schemaGroup${schemaCount}`;
+            newGroup.innerHTML = `
+            <label for="schemaName${schemaCount}">Schema Name:</label>
+            <input type="text" id="schemaName${schemaCount}" placeholder="e.g., User">
+            <label for="schemaType${schemaCount}">Type:</label>
+            <select id="schemaType${schemaCount}">
+                <option value="object">Object</option>
+                <option value="array">Array</option>
+                <option value="string">String</option>
+                <option value="integer">Integer</option>
+                <option value="number">Number</option>
+                <option value="boolean">Boolean</option>
+            </select>
+            <div id="schemaProperties${schemaCount}"></div>
+            <button class="add-button" onclick="addProperty(${schemaCount})">+ Add Property</button>
+            <label for="requiredProperties${schemaCount}">Required Properties (comma-separated):</label>
+            <input type="text" id="requiredProperties${schemaCount}" placeholder="e.g., id,name">
+            <button class="remove-button" onclick="removeSchema(${schemaCount})">- Remove Schema</button>
+        `;
+            schemas.appendChild(newGroup);
+            addProperty(schemaCount);
+            document.querySelector(`#schemaGroup1 .remove-button`).style.display = 'inline-block';
+        }
+
+        function removeSchema(id) {
+            const schemaGroup = document.getElementById(`schemaGroup${id}`);
+            schemaGroup.remove();
+            if (document.querySelectorAll('#schemas .field-group').length === 1) {
+                document.querySelector(`#schemaGroup1 .remove-button`).style.display = 'none';
+            }
+        }
+
+        function addProperty(schemaId) {
+            const schemaProperties = document.getElementById(`schemaProperties${schemaId}`);
+            const propertyCount = schemaProperties.children.length + 1;
+            const newGroup = document.createElement('div');
+            newGroup.className = 'nested-group';
+            newGroup.id = `propertyGroup${schemaId}_${propertyCount}`;
+            newGroup.innerHTML = `
+            <label for="propertyName${schemaId}_${propertyCount}">Property Name:</label>
+            <input type="text" id="propertyName${schemaId}_${propertyCount}" placeholder="e.g., id">
+            <label for="propertyType${schemaId}_${propertyCount}">Type:</label>
+            <select id="propertyType${schemaId}_${propertyCount}">
+                <option value="string">String</option>
+                <option value="integer">Integer</option>
+                <option value="number">Number</option>
+                <option value="boolean">Boolean</option>
+                <option value="array">Array</option>
+                <option value="object">Object</option>
+            </select>
+            <label for="propertyFormat${schemaId}_${propertyCount}">Format (optional):</label>
+            <input type="text" id="propertyFormat${schemaId}_${propertyCount}" placeholder="e.g., date-time, int64">
+            <label for="propertyDescription${schemaId}_${propertyCount}">Description:</label>
+            <input type="text" id="propertyDescription${schemaId}_${propertyCount}" placeholder="Property description">
+            <label for="propertyExample${schemaId}_${propertyCount}">Example:</label>
+            <input type="text" id="propertyExample${schemaId}_${propertyCount}" placeholder="Example value">
+            <label for="propertyMinimum${schemaId}_${propertyCount}">Minimum:</label>
+            <input type="number" id="propertyMinimum${schemaId}_${propertyCount}" placeholder="e.g., 1">
+            <label for="propertyMaximum${schemaId}_${propertyCount}">Maximum:</label>
+            <input type="number" id="propertyMaximum${schemaId}_${propertyCount}" placeholder="e.g., 100">
+            <label for="propertyPattern${schemaId}_${propertyCount}">Pattern:</label>
+            <input type="text" id="propertyPattern${schemaId}_${propertyCount}" placeholder="e.g., ^[a-zA-Z0-9]+$">
+            <label for="propertyEnum${schemaId}_${propertyCount}">Enum (comma-separated):</label>
+            <input type="text" id="propertyEnum${schemaId}_${propertyCount}" placeholder="e.g., value1,value2,value3">
+            <h4>XML</h4>
+            <label for="propertyXmlName${schemaId}_${propertyCount}">XML Name:</label>
+            <input type="text" id="propertyXmlName${schemaId}_${propertyCount}" placeholder="e.g., user">
+            <label for="propertyXmlNamespace${schemaId}_${propertyCount}">XML Namespace:</label>
+            <input type="text" id="propertyXmlNamespace${schemaId}_${propertyCount}" placeholder="e.g., http://example.com/schema">
+            <label for="propertyXmlPrefix${schemaId}_${propertyCount}">XML Prefix:</label>
+            <input type="text" id="propertyXmlPrefix${schemaId}_${propertyCount}" placeholder="e.g., xmp">
+            <label for="propertyXmlAttribute${schemaId}_${propertyCount}">XML Attribute:</label>
+            <input type="checkbox" id="propertyXmlAttribute${schemaId}_${propertyCount}">
+            <label for="propertyXmlWrapped${schemaId}_${propertyCount}">XML Wrapped:</label>
+            <input type="checkbox" id="propertyXmlWrapped${schemaId}_${propertyCount}">
+            <button class="remove-button" onclick="removeProperty(${schemaId}, ${propertyCount})">- Remove Property</button>
+        `;
+            schemaProperties.appendChild(newGroup);
+            if (schemaProperties.children.length > 1) {
+                schemaProperties.querySelectorAll('.remove-button').forEach(button => button.style.display = 'inline-block');
+            }
+        }
+
+        function removeProperty(schemaId, propertyId) {
+            const propertyGroup = document.getElementById(`propertyGroup${schemaId}_${propertyId}`);
+            propertyGroup.remove();
+            const schemaProperties = document.getElementById(`schemaProperties${schemaId}`);
+            if (schemaProperties.children.length === 1) {
+                schemaProperties.querySelector('.remove-button').style.display = 'none';
+            }
+        }
+
+        function addSecurityScheme() {
+            securitySchemeCount++;
+            const securitySchemes = document.getElementById('securitySchemes');
+            const newGroup = document.createElement('div');
+            newGroup.className = 'field-group';
+            newGroup.id = `securitySchemeGroup${securitySchemeCount}`;
+            newGroup.innerHTML = `
+            <label for="securitySchemeName${securitySchemeCount}">Name:</label>
+            <input type="text" id="securitySchemeName${securitySchemeCount}" placeholder="e.g., api_key">
+            <label for="securitySchemeType${securitySchemeCount}">Type:</label>
+            <select id="securitySchemeType${securitySchemeCount}" onchange="toggleSecuritySchemeFields(${securitySchemeCount})">
+                <option value="apiKey">API Key</option>
+                <option value="http">HTTP</option>
+                <option value="oauth2">OAuth2</option>
+                <option value="openIdConnect">OpenID Connect</option>
+            </select>
+            <div id="apiKeyFields${securitySchemeCount}" style="display:none;">
+                <label for="apiKeyName${securitySchemeCount}">Key Name:</label>
+                <input type="text" id="apiKeyName${securitySchemeCount}" placeholder="e.g., X-API-Key">
+                <label for="apiKeyIn${securitySchemeCount}">In:</label>
+                <select id="apiKeyIn${securitySchemeCount}">
+                    <option value="header">Header</option>
+                    <option value="query">Query</option>
+                    <option value="cookie">Cookie</option>
+                </select>
+            </div>
+            <div id="httpFields${securitySchemeCount}" style="display:none;">
+                <label for="httpScheme${securitySchemeCount}">Scheme:</label>
+                <input type="text" id="httpScheme${securitySchemeCount}" placeholder="e.g., bearer">
+            </div>
+            <div id="oauth2Fields${securitySchemeCount}" style="display:none;">
+                <label for="oauth2Flow${securitySchemeCount}">Flow:</label>
+                <select id="oauth2Flow${securitySchemeCount}">
+                    <option value="implicit">Implicit</option>
+                    <option value="password">Password</option>
+                    <option value="clientCredentials">Client Credentials</option>
+                    <option value="authorizationCode">Authorization Code</option>
+                </select>
+                <label for="oauth2AuthorizationUrl${securitySchemeCount}">Authorization URL:</label>
+                <input type="url" id="oauth2AuthorizationUrl${securitySchemeCount}" placeholder="https://example.com/oauth/authorize">
+                <label for="oauth2TokenUrl${securitySchemeCount}">Token URL:</label>
+                <input type="url" id="oauth2TokenUrl${securitySchemeCount}" placeholder="https://example.com/oauth/token">
+                <label for="oauth2Scopes${securitySchemeCount}">Scopes (comma-separated):</label>
+                <input type="text" id="oauth2Scopes${securitySchemeCount}" placeholder="e.g., read:pets,write:pets">
+            </div>
+            <div id="openIdConnectFields${securitySchemeCount}" style="display:none;">
+                <label for="openIdConnectUrl${securitySchemeCount}">OpenID Connect URL:</label>
+                <input type="url" id="openIdConnectUrl${securitySchemeCount}" placeholder="https://example.com/.well-known/openid-configuration">
+            </div>
+            <button class="remove-button" onclick="removeSecurityScheme(${securitySchemeCount})">- Remove Security Scheme</button>
+        `;
+            securitySchemes.appendChild(newGroup);
+            document.querySelector(`#securitySchemeGroup1 .remove-button`).style.display = 'inline-block';
+        }
+
+        function removeSecurityScheme(id) {
+            const securitySchemeGroup = document.getElementById(`securitySchemeGroup${id}`);
+            securitySchemeGroup.remove();
+            if (document.querySelectorAll('#securitySchemes .field-group').length === 1) {
+                document.querySelector(`#securitySchemeGroup1 .remove-button`).style.display = 'none';
+            }
+        }
+
+        function toggleSecuritySchemeFields(id) {
+            const type = document.getElementById(`securitySchemeType${id}`).value;
+            document.getElementById(`apiKeyFields${id}`).style.display = type === 'apiKey' ? 'block' : 'none';
+            document.getElementById(`httpFields${id}`).style.display = type === 'http' ? 'block' : 'none';
+            document.getElementById(`oauth2Fields${id}`).style.display = type === 'oauth2' ? 'block' : 'none';
+            document.getElementById(`openIdConnectFields${id}`).style.display = type === 'openIdConnect' ? 'block' : 'none';
+        }
+
+        function generateYaml() {
+            let yaml = 'openapi: 3.0.0\n';
+            yaml += 'info:\n';
+            yaml += `  title: ${document.getElementById('apiTitle').value}\n`;
+            yaml += `  description: ${document.getElementById('apiDescription').value}\n`;
+            yaml += `  version: ${document.getElementById('apiVersion').value}\n`;
+
+            const termsOfService = document.getElementById('termsOfService').value;
+            if (termsOfService) {
+                yaml += `  termsOfService: ${termsOfService}\n`;
+            }
+
+            yaml += '  contact:\n';
+            yaml += `    name: ${document.getElementById('contactName').value}\n`;
+            yaml += `    email: ${document.getElementById('contactEmail').value}\n`;
+            yaml += `    url: ${document.getElementById('contactUrl').value}\n`;
+
+            yaml += '  license:\n';
+            yaml += `    name: ${document.getElementById('licenseName').value}\n`;
+            yaml += `    url: ${document.getElementById('licenseUrl').value}\n`;
+
+            const externalDocsDescription = document.getElementById('externalDocsDescription').value;
+            const externalDocsUrl = document.getElementById('externalDocsUrl').value;
+            if (externalDocsDescription || externalDocsUrl) {
+                yaml += 'externalDocs:\n';
+                if (externalDocsDescription) yaml += `  description: ${externalDocsDescription}\n`;
+                if (externalDocsUrl) yaml += `  url: ${externalDocsUrl}\n`;
+            }
+
+            yaml += 'servers:\n';
+            document.querySelectorAll('#serverUrls .field-group').forEach((group) => {
+                const url = group.querySelector('input[type="url"]').value;
+                const description = group.querySelector('input[type="text"]').value;
+                if (url) {
+                    yaml += `  - url: ${url}\n`;
+                    if (description) {
+                        yaml += `    description: ${description}\n`;
+                    }
+                }
+            });
+
+            yaml += 'tags:\n';
+            document.querySelectorAll('#tags .field-group').forEach((group) => {
+                const name = group.querySelector('input[placeholder="e.g., user"]').value;
+                const description = group.querySelector('input[placeholder="e.g., User operations"]').value;
+                const externalDocsDescription = group.querySelector('input[placeholder="e.g., Find out more"]').value;
+                const externalDocsUrl = group.querySelector('input[placeholder="https://example.com/docs/user"]').value;
+                if (name) {
+                    yaml += `  - name: ${name}\n`;
+                    if (description) yaml += `    description: ${description}\n`;
+                    if (externalDocsDescription || externalDocsUrl) {
+                        yaml += '    externalDocs:\n';
+                        if (externalDocsDescription) yaml += `      description: ${externalDocsDescription}\n`;
+                        if (externalDocsUrl) yaml += `      url: ${externalDocsUrl}\n`;
+                    }
+                }
+            });
+
+            yaml += 'paths:\n';
+            document.querySelectorAll('#paths .field-group').forEach((pathGroup) => {
+                const path = pathGroup.querySelector('input[type="text"]').value;
+                if (path) {
+                    yaml += `  ${path}:\n`;
+                    pathGroup.querySelectorAll('.nested-group').forEach((operationGroup) => {
+                        const method = operationGroup.querySelector('select').value;
+                        yaml += `    ${method}:\n`;
+                        yaml += `      summary: ${operationGroup.querySelector('input[placeholder="Brief summary of this operation"]').value}\n`;
+                        yaml += `      description: ${operationGroup.querySelector('textarea').value}\n`;
+                        yaml += `      operationId: ${operationGroup.querySelector('input[placeholder="e.g., getUsers"]').value}\n`;
+
+                        const tags = operationGroup.querySelector('input[placeholder="e.g., user, list"]').value;
+                        if (tags) {
+                            yaml += '      tags:\n';
+                            tags.split(',').forEach(tag => {
+                                yaml += `        - ${tag.trim()}\n`;
+                            });
+                        }
+
+                        // Parameters
+                        const parameters = operationGroup.querySelectorAll('#parameters' + operationGroup.id.split('_')[1] + ' .nested-group');
+                        if (parameters.length > 0) {
+                            yaml += '      parameters:\n';
+                            parameters.forEach((param) => {
+                                yaml += '        - ';
+                                yaml += `name: ${param.querySelector('input[placeholder="e.g., id"]').value}\n`;
+                                yaml += `          in: ${param.querySelector('select').value}\n`;
+                                yaml += `          description: ${param.querySelector('input[placeholder="Description of the parameter"]').value}\n`;
+                                yaml += `          required: ${param.querySelector('select[id^="paramRequired"]').value}\n`;
+                                yaml += '          schema:\n';
+                                yaml += `            type: ${param.querySelector('select[id^="paramType"]').value}\n`;
+
+                                const enumValues = param.querySelector('input[placeholder="e.g., value1,value2,value3"]').value;
+                                if (enumValues) {
+                                    yaml += '            enum:\n';
+                                    enumValues.split(',').forEach(value => {
+                                        yaml += `              - ${value.trim()}\n`;
+                                    });
+                                }
+
+                                const minimum = param.querySelector('input[placeholder="e.g., 1"]').value;
+                                if (minimum) yaml += `            minimum: ${minimum}\n`;
+
+                                const maximum = param.querySelector('input[placeholder="e.g., 100"]').value;
+                                if (maximum) yaml += `            maximum: ${maximum}\n`;
+
+                                const pattern = param.querySelector('input[placeholder="e.g., ^[a-zA-Z0-9]+$"]').value;
+                                if (pattern) yaml += `            pattern: ${pattern}\n`;
+                            });
+                        }
+
+                        // Request Body
+                        const requestBody = operationGroup.querySelector('#requestBody' + operationGroup.id.split('_')[1]);
+                        if (requestBody.children.length > 0) {
+                            yaml += '      requestBody:\n';
+                            yaml += `        description: ${requestBody.querySelector('input[placeholder="Description of the request body"]').value}\n`;
+                            yaml += `        required: ${requestBody.querySelector('select').value}\n`;
+                            yaml += '        content:\n';
+                            requestBody.querySelectorAll('.nested-group').forEach((content) => {
+                                const contentType = content.querySelector('input[placeholder="e.g., application/json"]').value;
+                                yaml += `          ${contentType}:\n`;
+                                yaml += '            schema:\n';
+                                yaml += `              $ref: '${content.querySelector('input[placeholder="e.g., #/components/schemas/User"]').value}'\n`;
+                                const example = content.querySelector('textarea').value;
+                                if (example) {
+                                    yaml += '            example: |\n';
+                                    example.split('\n').forEach(line => {
+                                        yaml += `              ${line}\n`;
+                                    });
+                                }
+                            });
+                        }
+
+                        // Responses
+                        const responses = operationGroup.querySelectorAll('#responses' + operationGroup.id.split('_')[1] + ' .nested-group');
+                        if (responses.length > 0) {
+                            yaml += '      responses:\n';
+                            responses.forEach((response) => {
+                                const statusCode = response.querySelector('input[placeholder="e.g., 200"]').value;
+                                yaml += `        '${statusCode}':\n`;
+                                yaml += `          description: ${response.querySelector('input[placeholder="e.g., Successful response"]').value}\n`;
+                                const responseContent = response.querySelectorAll('#responseContent' + response.id.split('_')[2] + ' .nested-group');
+                                if (responseContent.length > 0) {
+                                    yaml += '          content:\n';
+                                    responseContent.forEach((content) => {
+                                        const contentType = content.querySelector('input[placeholder="e.g., application/json"]').value;
+                                        yaml += `            ${contentType}:\n`;
+                                        yaml += '              schema:\n';
+                                        yaml += `                $ref: '${content.querySelector('input[placeholder="e.g., #/components/schemas/User"]').value}'\n`;
+                                        const example = content.querySelector('textarea').value;
+                                        if (example) {
+                                            yaml += '              example: |\n';
+                                            example.split('\n').forEach(line => {
+                                                yaml += `                ${line}\n`;
+                                            });
+                                        }
+                                    });
+                                }
+                                const headers = response.querySelector('input[placeholder="e.g., X-Rate-Limit,X-Expires-After"]').value;
+                                if (headers) {
+                                    yaml += '          headers:\n';
+                                    headers.split(',').forEach(header => {
+                                        yaml += `            ${header.trim()}:\n`;
+                                        yaml += '              schema:\n';
+                                        yaml += '                type: string\n';
+                                    });
+                                }
+                            });
+                        }
+
+                        // Security
+                        const security = operationGroup.querySelectorAll('#security' + operationGroup.id.split('_')[1] + ' .nested-group');
+                        if (security.length > 0) {
+                            yaml += '      security:\n';
+                            security.forEach((sec) => {
+                                const scheme = sec.querySelector('input[placeholder="e.g., api_key"]').value;
+                                const scopes = sec.querySelector('input[placeholder="e.g., read:users,write:users"]').value;
+                                yaml += '        - ';
+                                yaml += `${scheme}:\n`;
+                                if (scopes) {
+                                    scopes.split(',').forEach(scope => {
+                                        yaml += `            - ${scope.trim()}\n`;
+                                    });
+                                } else {
+                                    yaml += '            []\n';
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            yaml += 'components:\n';
+            yaml += '  schemas:\n';
+            document.querySelectorAll('#schemas .field-group').forEach((schemaGroup) => {
+                const schemaName = schemaGroup.querySelector('input[type="text"]').value;
+                if (schemaName) {
+                    yaml += `    ${schemaName}:\n`;
+                    yaml += `      type: ${schemaGroup.querySelector('select').value}\n`;
+                    yaml += '      properties:\n';
+                    schemaGroup.querySelectorAll('#schemaProperties' + schemaGroup.id.split('Group')[1] + ' .nested-group').forEach((propertyGroup) => {
+                        const propertyName = propertyGroup.querySelector('input[placeholder="e.g., id"]').value;
+                        const propertyType = propertyGroup.querySelector('select').value;
+                        if (propertyName) {
+                            yaml += `        ${propertyName}:\n`;
+                            yaml += `          type: ${propertyType}\n`;
+
+                            const format = propertyGroup.querySelector('input[placeholder="e.g., date-time, int64"]').value;
+                            if (format) yaml += `          format: ${format}\n`;
+
+                            const description = propertyGroup.querySelector('input[placeholder="Property description"]').value;
+                            if (description) yaml += `          description: ${description}\n`;
+
+                            const example = propertyGroup.querySelector('input[placeholder="Example value"]').value;
+                            if (example) yaml += `          example: ${example}\n`;
+
+                            const minimum = propertyGroup.querySelector('input[placeholder="e.g., 1"]').value;
+                            if (minimum) yaml += `          minimum: ${minimum}\n`;
+
+                            const maximum = propertyGroup.querySelector('input[placeholder="e.g., 100"]').value;
+                            if (maximum) yaml += `          maximum: ${maximum}\n`;
+
+                            const pattern = propertyGroup.querySelector('input[placeholder="e.g., ^[a-zA-Z0-9]+$"]').value;
+                            if (pattern) yaml += `          pattern: ${pattern}\n`;
+
+                            const enumValues = propertyGroup.querySelector('input[placeholder="e.g., value1,value2,value3"]').value;
+                            if (enumValues) {
+                                yaml += '          enum:\n';
+                                enumValues.split(',').forEach(value => {
+                                    yaml += `            - ${value.trim()}\n`;
+                                });
+                            }
+
+                            const xmlName = propertyGroup.querySelector('input[placeholder="e.g., user"]').value;
+                            const xmlNamespace = propertyGroup.querySelector('input[placeholder="e.g., http://example.com/schema"]').value;
+                            const xmlPrefix = propertyGroup.querySelector('input[placeholder="e.g., xmp"]').value;
+                            const xmlAttribute = propertyGroup.querySelector('input[type="checkbox"]').checked;
+                            const xmlWrapped = propertyGroup.querySelectorAll('input[type="checkbox"]')[1].checked;
+
+                            if (xmlName || xmlNamespace || xmlPrefix || xmlAttribute || xmlWrapped) {
+                                yaml += '          xml:\n';
+                                if (xmlName) yaml += `            name: ${xmlName}\n`;
+                                if (xmlNamespace) yaml += `            namespace: ${xmlNamespace}\n`;
+                                if (xmlPrefix) yaml += `            prefix: ${xmlPrefix}\n`;
+                                if (xmlAttribute) yaml += '            attribute: true\n';
+                                if (xmlWrapped) yaml += '            wrapped: true\n';
+                            }
+                        }
+                    });
+                    const requiredProperties = schemaGroup.querySelector('input[placeholder="e.g., id,name"]').value;
+                    if (requiredProperties) {
+                        yaml += '      required:\n';
+                        requiredProperties.split(',').forEach(prop => {
+                            yaml += `        - ${prop.trim()}\n`;
+                        });
+                    }
+                }
+            });
+
+            yaml += '  securitySchemes:\n';
+            document.querySelectorAll('#securitySchemes .field-group').forEach((schemeGroup) => {
+                const schemeName = schemeGroup.querySelector('input[type="text"]').value;
+                const schemeType = schemeGroup.querySelector('select').value;
+                if (schemeName) {
+                    yaml += `    ${schemeName}:\n`;
+                    yaml += `      type: ${schemeType}\n`;
+                    switch (schemeType) {
+                        case 'apiKey':
+                            yaml += `      name: ${schemeGroup.querySelector('#apiKeyName' + schemeGroup.id.split('Group')[1]).value}\n`;
+                            yaml += `      in: ${schemeGroup.querySelector('#apiKeyIn' + schemeGroup.id.split('Group')[1]).value}\n`;
+                            break;
+                        case 'http':
+                            yaml += `      scheme: ${schemeGroup.querySelector('#httpScheme' + schemeGroup.id.split('Group')[1]).value}\n`;
+                            break;
+                        case 'oauth2':
+                            yaml += '      flows:\n';
+                            yaml += `        ${schemeGroup.querySelector('#oauth2Flow' + schemeGroup.id.split('Group')[1]).value}:\n`;
+                            yaml += `          authorizationUrl: ${schemeGroup.querySelector('#oauth2AuthorizationUrl' + schemeGroup.id.split('Group')[1]).value}\n`;
+                            yaml += `          tokenUrl: ${schemeGroup.querySelector('#oauth2TokenUrl' + schemeGroup.id.split('Group')[1]).value}\n`;
+                            yaml += '          scopes:\n';
+                            schemeGroup.querySelector('#oauth2Scopes' + schemeGroup.id.split('Group')[1]).value.split(',').forEach(scope => {
+                                yaml += `            ${scope.trim()}: ''\n`;
+                            });
+                            break;
+                        case 'openIdConnect':
+                            yaml += `      openIdConnectUrl: ${schemeGroup.querySelector('#openIdConnectUrl' + schemeGroup.id.split('Group')[1]).value}\n`;
+                            break;
+                    }
+                }
+            });
+
+            const blob = new Blob([yaml], { type: 'text/yaml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'openapi-spec.yaml';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+
+</html>
